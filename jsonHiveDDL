@@ -1,0 +1,43 @@
+
+add jar /home/cloudera/hive-serde-1.0.jar
+
+create table OTA_JSON (
+CheckInDateTime String,
+PropertyID int,
+PropertyName String,
+ChannelID int,
+ChannelName String,
+LOS int,
+Guest int,
+ProductType String,
+RateCategory String,
+Inclusion String,
+Promotion boolean,
+Restriction boolean,
+IsCurrent boolean,
+IsSubscriber boolean,
+Currency String,
+Rate float,
+InclusiveRate float,
+ExclusiveRate float,
+ShoppedDateTime String,
+Description String,
+Status String,
+SegmentID int,
+RankNumber int,
+RateChange float,
+SiteType String,
+DateMillis float
+)
+ROW FORMAT SERDE 'com.proofpoint.hive.serde.JsonSerde'
+WITH SERDEPROPERTIES ('errors.ignore' = 'true')
+
+LOAD DATA LOCAL INPATH '/home/cloudera/OTA_MonthlyView1.txt' OVERWRITE INTO TABLE OTA_JSON;
+
+
+select PropertyID,CheckInDateTime,min(Rate)
+from ota_json
+where los=1
+and guest=1
+group by CheckInDateTime,PropertyID
+

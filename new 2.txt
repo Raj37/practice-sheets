@@ -1,0 +1,5 @@
+Lines= LOAD 'pig/pigfile.txt' AS (line:chararray);
+Words= FOREACH Lines GENERATE FLATTEN(TOKENIZE(line)) AS word;
+Groups= GROUP Words BY word;
+Counts= FOREACH Groups GENERATE group,COUNT(Words);
+STORE Counts INTO 'counts'
